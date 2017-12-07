@@ -1,17 +1,16 @@
 import json
 
+from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
-from django.http import HttpResponse
-from django.contrib.auth.models import User
-
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from home.forms import UserForm
 from home.models import Book, Student, Listing, Exchange, School
-from home.serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer,\
+from home.serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer, \
     UserSerializer, SchoolSerializer
 
 

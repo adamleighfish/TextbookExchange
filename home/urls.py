@@ -1,10 +1,8 @@
 from django.conf.urls import url, include
 from django.contrib.auth.views import login, logout
-
 from rest_framework import routers
 
 from home import views
-
 
 router = routers.DefaultRouter()
 router.register(r'books', views.BookViewSet)
