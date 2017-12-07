@@ -13,6 +13,7 @@ router.register(r'school', views.SchoolViewSet)
 urlpatterns = [
     url(r'^$', views.home,name='home'),
     url(r'^about/', views.about, name='about'),
+    url(r'^dashboard/', views.dashboard, name='dashboard'),
     url(r'^autocomplete/get_book/', views.AutoCompleteView.as_view(), name = 'get_book'),
     url(r'^api/', include(router.urls)),
     url(r'^listing_list/$', views.ListBooks.as_view(), name = 'booksearch'),

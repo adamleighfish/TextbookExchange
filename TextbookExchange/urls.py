@@ -7,5 +7,4 @@ urlpatterns = [
     url(r'^', include('home.urls', namespace="home")),
     url(r'^register/', include('register.urls', namespace="register")),
     url(r'^login/', include('login.urls', namespace="login")),
-    url(r'^dashboard/', include('dashboard.urls')),
 ]

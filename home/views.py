@@ -23,6 +23,12 @@ def about(request):
 
     return render(request, "about/about.html", {'session_language': session_language})
 
+def dashboard(request):
+    session_language = 'en'
+    request.session['lang'] = session_language
+
+    return render(request,'dashboard/dashboard.html',{'session_language': session_language})
+
 
 class AutoCompleteView(FormView):
     def get(self, request, *args, **kwargs):
