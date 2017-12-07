@@ -6,11 +6,11 @@ from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Q
+
 from .models import Book, Student, Listing, Exchange, School
 from .serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer, UserSerializer, SchoolSerializer
 from django.contrib.auth.models import User
-
+from django.db import connection
 # Create your views here.
 def home(request):
     session_language = 'en'
@@ -76,13 +76,10 @@ class SchoolViewSet(viewsets.ModelViewSet):
 
 class ListBooks(ListView):
     paginate_by = 10
-
+    template_name = 'home/listing_list.html'
+    context_object_name = 'result'
     def get_queryset(self):
-
         query = self.request.GET.get('q')
         if query:
-            listing = Listing.objects.raw('Select s.school, l.type, l.date from home_student s,home_listing l, home_book b where l.bid=b.isbn and s.user=l.sid and b.title like %s order by l.date',[query])
-            if len(list(listing)) != 0:
-                return listing
-            else:
-                return "No Results"
+            result = Listing.objects.filter(bid__title__iexact=query)
+        return result

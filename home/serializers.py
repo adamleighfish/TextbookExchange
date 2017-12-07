@@ -32,6 +32,8 @@ class StudentSerializer(serializers.HyperlinkedModelSerializer):
 
 class ListingSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="home:listing-detail")
+    sid = StudentSerializer()
+    bid = BookSerializer()
     class Meta:
         model = Listing
         fields = ('url', 'sid', 'bid', 'type', 'date', 'open')
@@ -39,6 +41,10 @@ class ListingSerializer(serializers.HyperlinkedModelSerializer):
 
 class ExchangeSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="home:exchange-detail")
+    bid1 = BookSerializer()
+    bid2 = BookSerializer()
+    sid1 = StudentSerializer()
+    sid2 = StudentSerializer()
     class Meta:
         model = Exchange
         fields = ('url','sid1','bid1','sid2','bid2','date')

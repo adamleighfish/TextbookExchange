@@ -26,6 +26,8 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='+')
     school = models.ForeignKey(School)
 
+    def __str__(self):
+        return self.school.school
 
 """ Book Table
 

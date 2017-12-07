@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'register',
     'home',
     'dashboard',
+    'login',
     'rest_framework',
+    'django_tables2'
 ]
 
 MIDDLEWARE = [
