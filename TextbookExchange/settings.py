@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
-    'login',
     'rest_framework',
     'django_tables2'
 ]
@@ -126,7 +125,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
+
 LOGIN_URL = 'login/login.html'
+
+LOGIN_REDIRECT_URL = '../dashboard/dashboard.html'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [

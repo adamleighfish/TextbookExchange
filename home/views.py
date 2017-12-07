@@ -1,16 +1,23 @@
 import json
 
-from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
-from register.forms import UserForm
+from home.forms import UserForm
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+
+
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Book, Student, Listing, Exchange, School
-from .serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer, UserSerializer, SchoolSerializer
-from django.contrib.auth.models import User
+from .serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer, \
+    UserSerializer, SchoolSerializer
+
 
 def home(request):
     session_language = 'en'
@@ -18,17 +25,20 @@ def home(request):
 
     return render(request, "home/home.html", {'session_language': session_language})
 
+
 def about(request):
     session_language = 'en'
     request.session['lang'] = session_language
 
     return render(request, "about/about.html", {'session_language': session_language})
 
+
 def dashboard(request):
     session_language = 'en'
     request.session['lang'] = session_language
 
-    return render(request,'dashboard/dashboard.html',{'session_language': session_language})
+    return render(request,'dashboard/dashboard.html', {'session_language': session_language})
+
 
 def register(request):
     registered = False
@@ -48,8 +58,34 @@ def register(request):
     else:
         user_form = UserForm()
 
-    return render(request,'register/register.html',{'user_form':user_form,
-                                                    'registered': registered})
+    return render(request, 'register/register.html', {'user_form':user_form,
+                                                      'registered': registered})
+
+
+def user_login(request):
+    session_language = 'en'
+    request.session['lang'] = session_language
+
+    '''
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect(reverse('dashboard/dashboard.html'))
+            else:
+                return HttpResponse("ACCOUNT NOT ACTIVE")
+        else:
+            print("Someone tried to login and failed")
+            print("Username: {} and password {}".format(username, password))
+            return HttpResponse("Invalid login details")
+    else:
+    '''
+    render(request, 'login/login.html', {'session_language': session_language})
 
 
 class AutoCompleteView(FormView):
