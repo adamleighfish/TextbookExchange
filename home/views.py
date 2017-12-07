@@ -11,8 +11,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from home.forms import UserForm
 from home.models import Book, Student, Listing, Exchange, School
-from home.serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer, UserSerializer,\
-    SchoolSerializer
+from home.serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer,\
+    UserSerializer, SchoolSerializer
 
 
 def home(request):
@@ -146,4 +146,4 @@ class ListBooks(ListView):
         query = self.request.GET.get('q')
         if query:
             result = Listing.objects.filter(bid__title__iexact=query)
-        return result
+            return result
