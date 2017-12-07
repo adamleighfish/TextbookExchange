@@ -56,31 +56,6 @@ def register(request):
     return render(request, 'register/register.html', {'user_form': user_form, 'registered': registered})
 
 
-def user_login(request):
-    session_language = 'en'
-    request.session['lang'] = session_language
-
-    '''
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = authenticate(username=username, password=password)
-
-        if user:
-            if user.is_active:
-                login(request, user)
-                return HttpResponseRedirect(reverse('dashboard/dashboard.html'))
-            else:
-                return HttpResponse("ACCOUNT NOT ACTIVE")
-        else:
-            print("Someone tried to login and failed")
-            print("Username: {} and password {}".format(username, password))
-            return HttpResponse("Invalid login details")
-    else:
-    '''
-    render(request, 'login/login.html', {'session_language': session_language})
-
 
 class AutoCompleteView(FormView):
     def get(self, request, *args, **kwargs):
