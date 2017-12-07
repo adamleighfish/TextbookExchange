@@ -7,9 +7,9 @@ from django.views.generic.list import ListView
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
-from .models import Book, Student, Listing, Exchange
-from .serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer
-
+from .models import Book, Student, Listing, Exchange, School
+from .serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer, UserSerializer, SchoolSerializer
+from django.contrib.auth.models import User
 
 # Create your views here.
 def home(request):
@@ -63,6 +63,16 @@ class ExchangeViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Exchange.objects.all()
     serializer_class = ExchangeSerializer
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class SchoolViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = School.objects.all()
+    serializer_class = SchoolSerializer
 
 class ListBooks(ListView):
     paginate_by = 10

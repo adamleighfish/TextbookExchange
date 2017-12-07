@@ -7,6 +7,8 @@ router.register(r'books', views.BookViewSet)
 router.register(r'students', views.StudentViewSet)
 router.register(r'listing', views.ListingViewSet)
 router.register(r'exchange', views.ExchangeViewSet)
+router.register(r'user', views.UserViewSet)
+router.register(r'school', views.SchoolViewSet)
 
 urlpatterns = [
     url(r'^$', views.home,name='home'),

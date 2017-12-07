@@ -1,23 +1,44 @@
 from rest_framework import serializers
-from .models import Book, Student, Listing, Exchange
+from .models import Book, Student, Listing, Exchange, School
+from django.contrib.auth.models import User
 
 class BookSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="home:book-detail")
     class Meta:
         model = Book
         fields = ('url','title', 'ISBN')
 
+class SchoolSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="home:school-detail")
+    class Meta:
+        model = School
+        lookup_field = 'school'
+        fields = ('url','school', 'state', 'city')
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="home:user-detail")
+    class Meta:
+        model = User
+        lookup_field = 'username'
+        fields = ('url', 'username')
+
 class StudentSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="home:student-detail")
+    user = UserSerializer()
+    school = SchoolSerializer()
     class Meta:
         model = Student
         fields = ('url','user', 'school')
 
 class ListingSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="home:listing-detail")
     class Meta:
         model = Listing
         fields = ('url', 'sid', 'bid', 'type', 'date', 'open')
         read_only_fields = ('sid','bid','date')
 
 class ExchangeSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="home:exchange-detail")
     class Meta:
         model = Exchange
         fields = ('url','sid1','bid1','sid2','bid2','date')
