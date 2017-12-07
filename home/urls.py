@@ -10,6 +10,7 @@ router.register(r'exchange', views.ExchangeViewSet)
 
 urlpatterns = [
     url(r'^$', views.home,name='home'),
-    url(r'^autocomplete/get_book', views.AutoCompleteView.as_view(), name='autocomplete'),
-    url(r'^api/', include(router.urls))
+    url(r'^autocomplete/get_book/', views.AutoCompleteView.as_view(), name = 'get_book'),
+    url(r'^api/', include(router.urls)),
+    url(r'^search_results', views.ListBooks.as_view(), name = 'booksearch')
 ]

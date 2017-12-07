@@ -3,9 +3,10 @@ import json
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic.edit import FormView
+from django.views.generic.list import ListView
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-
+from django.db.models import Q
 from .models import Book, Student, Listing, Exchange
 from .serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer
 
@@ -62,3 +63,16 @@ class ExchangeViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Exchange.objects.all()
     serializer_class = ExchangeSerializer
+
+class ListBooks(ListView):
+    paginate_by = 10
+
+    def get_queryset(self):
+
+        query = self.request.GET.get('q')
+        if query:
+            listing = Listing.objects.raw('Select s.school, l.type, l.date from home_student s,home_listing l, home_book b where l.bid=b.isbn and s.user=l.sid and b.title like %s order by l.date',[query])
+            if len(list(listing)) != 0:
+                return listing
+            else:
+                return "No Results"

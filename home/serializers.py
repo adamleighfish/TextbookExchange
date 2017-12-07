@@ -9,7 +9,7 @@ class BookSerializer(serializers.HyperlinkedModelSerializer):
 class StudentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Student
-        fields = ('url','fname', 'lname', 'school', 'email')
+        fields = ('url','user', 'school')
 
 class ListingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

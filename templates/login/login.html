@@ -28,9 +28,9 @@
                     <li class="active"><a href="">Home</a></li>
                     <li><a href="about">About</a></li>
                     {% if user.is_authenticated %}
-                    <li><a href="{ url 'login:user_logout' %}">Logout</a></li>
+                    <li><a href="{% url 'login:user_logout' %}">Logout</a></li>
                     {% else %}
-                    <li><a href="{% login:user_login %}">Login</a></li>
+                    <li><a href="{% url 'login:user_login' %}">Login</a></li>
                     {% endif %}
                 </ul>
             </div>

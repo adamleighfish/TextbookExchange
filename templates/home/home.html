@@ -37,18 +37,25 @@
             </div>
         </div>
     </nav>
-    <div id="booksearch">
-    <h2>Search Available Books</h2>
-    <input name="book_name"class="form-control "id="new_book">
-        <script type="text/javascript">
+    <form id="searchform" action="{%  url 'home:booksearch' %}" method="get">
+        <div class = "input-group input-group-lg">
+        <input class="form-control" id="q" name="q" placeholder="Search for books...">
+            <script type="text/javascript">
         $(function() {
-        $("#new_book").autocomplete({
-        source: "/autocomplete/get_book/",
+        $("#q").autocomplete({
+        source: "/homepage/autocomplete/get_book/",
         minLength: 2
         });
         });
         </script>
-    </div>
+        <div class="input-group-btn">
+            <button class="btn btn-primary btn-block" type="submit">
+                <i class="glyphicon glyphicon-search"></i>
+                </button>
+            </div>
+        </div>
+
+</form>
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
