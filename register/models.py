@@ -24,4 +24,8 @@ Standard db representation of a student
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='+')
+
     school = models.ForeignKey(School)
+
+    def _str_(self):
+        return self.user.username
