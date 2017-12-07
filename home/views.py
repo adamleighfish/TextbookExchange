@@ -10,13 +10,18 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Book, Student, Listing, Exchange, School
 from .serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer, UserSerializer, SchoolSerializer
 from django.contrib.auth.models import User
-from django.db import connection
-# Create your views here.
+
 def home(request):
     session_language = 'en'
     request.session['lang'] = session_language
 
     return render(request, "home/home.html", {'session_language': session_language})
+
+def about(request):
+    session_language = 'en'
+    request.session['lang'] = session_language
+
+    return render(request, "about/about.html", {'session_language': session_language})
 
 
 class AutoCompleteView(FormView):
