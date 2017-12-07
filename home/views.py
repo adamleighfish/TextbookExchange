@@ -3,20 +3,16 @@ import json
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
-from home.forms import UserForm
-from django.urls import reverse
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse
-from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse
 from django.contrib.auth.models import User
-
 
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Book, Student, Listing, Exchange, School
-from .serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer, \
-    UserSerializer, SchoolSerializer
+from home.forms import UserForm
+from home.models import Book, Student, Listing, Exchange, School
+from home.serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer, UserSerializer,\
+    SchoolSerializer
 
 
 def home(request):
@@ -30,14 +26,14 @@ def about(request):
     session_language = 'en'
     request.session['lang'] = session_language
 
-    return render(request, "about/about.html", {'session_language': session_language})
+    return render(request, 'about/about.html', {'session_language': session_language})
 
 
 def dashboard(request):
     session_language = 'en'
     request.session['lang'] = session_language
 
-    return render(request,'dashboard/dashboard.html', {'session_language': session_language})
+    return render(request, 'dashboard/dashboard.html', {'session_language': session_language})
 
 
 def register(request):
@@ -58,8 +54,7 @@ def register(request):
     else:
         user_form = UserForm()
 
-    return render(request, 'register/register.html', {'user_form':user_form,
-                                                      'registered': registered})
+    return render(request, 'register/register.html', {'user_form': user_form, 'registered': registered})
 
 
 def user_login(request):
@@ -99,15 +94,11 @@ class AutoCompleteView(FormView):
 
         results = []
         for book in books:
-            book_json = {}
-            book_json['id'] = book.id
-            book_json['label'] = book.title
-            book_json['value'] = book.title
+            book_json = {'id': book.id, 'label': book.title, 'value': book.title}
             results.append(book_json)
             data = json.dumps(results)
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
-
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -133,20 +124,24 @@ class ExchangeViewSet(viewsets.ModelViewSet):
     queryset = Exchange.objects.all()
     serializer_class = ExchangeSerializer
 
+
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
 
 class SchoolViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
 
+
 class ListBooks(ListView):
     paginate_by = 10
     template_name = 'home/listing_list.html'
     context_object_name = 'result'
+
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
