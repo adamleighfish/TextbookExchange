@@ -57,7 +57,6 @@ def register(request):
     return render(request, 'register/register.html', {'user_form': user_form, 'registered': registered})
 
 
-
 class AutoCompleteView(FormView):
     def get(self, request, *args, **kwargs):
         data = request.GET
