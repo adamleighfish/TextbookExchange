@@ -7,12 +7,13 @@ from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-
+from django.db.models import Q
 from home.forms import UserForm
 from home.models import Book, Student, Listing, Exchange, School
 from home.serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer, \
     UserSerializer, SchoolSerializer
-
+import operator
+from functools import reduce
 
 def home(request):
     session_language = 'en'
@@ -117,7 +118,11 @@ class ListBooks(ListView):
     context_object_name = 'result'
 
     def get_queryset(self):
+        result = Listing.objects.all()
         query = self.request.GET.get('q')
         if query:
-            result = Listing.objects.filter(bid__title__iexact=query)
-            return result
+            query_list = query.split()
+            result = result.filter(reduce(operator.and_, (Q(bid__title__icontains=q) for q in query_list)))
+
+        return result
+

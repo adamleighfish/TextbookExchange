@@ -30,7 +30,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
         model = User
         lookup_field = 'username'
-        fields = ('url', 'username')
+        fields = ('url', 'username', 'first_name', 'last_name')
 
 
 class StudentSerializer(serializers.HyperlinkedModelSerializer):
