@@ -27,6 +27,7 @@
                     <li><a href="/">Home</a></li>
                     <li><a href="/about/">About</a></li>
                     {% if user.is_authenticated %}
+                    <li><a href="{% url 'home:dashboard' %}">Dashboard</a></li>
                     <li><a href="{% url 'home:logout' %}">Logout</a></li>
                     {% else %}
                     <li><a href="{% url 'home:login' %}">Login</a></li>
@@ -40,7 +41,7 @@
       <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <h2>User's Name</h2>  <!-- Need to Link User name to name in database -->
+                <h2>Welcome {{request.user.username}}</h2>  <!-- Need to Link User name to name in database -->
             </div>
           </div>
       </div>
