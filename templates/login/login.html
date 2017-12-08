@@ -25,12 +25,12 @@
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="">Home</a></li>
-                    <li><a href="about">About</a></li>
+                    <li><a href="../">Home</a></li>
+                    <li><a href="../about">About</a></li>
                     {% if user.is_authenticated %}
-                    <li><a href="{% url 'login:user_logout' %}">Logout</a></li>
+                    <li><a href="{% url 'home:logout' %}">Logout</a></li>
                     {% else %}
-                    <li><a href="{% url 'login:user_login' %}">Login</a></li>
+                    <li><a href="{% url 'home:login' %}">Login</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -38,7 +38,7 @@
     </nav>
     <div class ='jumbotron'>
         <h1>Please Login</h1>
-        <form action="{% url 'login:user_login' %}" method="POST">
+        <form action="{% url 'home:login' %}" method="POST">
             {% csrf_token %}
             <label for="username">Username: </label>
             <input type="text" name="username" placeholder="Enter Username">

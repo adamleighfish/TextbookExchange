@@ -28,9 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,10 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'register',
     'home',
-    'dashboard',
-    'login',
     'rest_framework',
     'django_tables2'
 ]
@@ -61,8 +56,7 @@ ROOT_URLCONF = 'TextbookExchange.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,7 +123,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
-LOGIN_URL='login/login.html'
+
+LOGIN_URL = 'login/login.html'
+
+LOGIN_REDIRECT_URL = '../dashboard/dashboard.html'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [

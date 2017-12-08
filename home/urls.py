@@ -1,6 +1,8 @@
 from django.conf.urls import url, include
-from home import views
+from django.contrib.auth.views import login, logout
 from rest_framework import routers
+
+from home import views
 
 router = routers.DefaultRouter()
 router.register(r'books', views.BookViewSet)
@@ -11,8 +13,13 @@ router.register(r'user', views.UserViewSet)
 router.register(r'school', views.SchoolViewSet)
 
 urlpatterns = [
-    url(r'^$', views.home,name='home'),
-    url(r'^autocomplete/get_book/', views.AutoCompleteView.as_view(), name = 'get_book'),
+    url(r'^$', views.home, name='home'),
+    url(r'^about/', views.about, name='about'),
+    url(r'^dashboard/', views.dashboard, name='dashboard'),
+    url(r'^register/$', views.register, name='register'),
+    url(r'^login/$', login, {'template_name': 'login/login.html'}, name='login'),
+    url(r'^logout/$', logout, {'next_page': '/'}, name='logout'),
+    url(r'^autocomplete/get_book/', views.AutoCompleteView.as_view(), name='get_book'),
     url(r'^api/', include(router.urls)),
-    url(r'^listing_list/$', views.ListBooks.as_view(), name = 'booksearch'),
+    url(r'^listing_list/$', views.ListBooks.as_view(), name='booksearch'),
 ]
