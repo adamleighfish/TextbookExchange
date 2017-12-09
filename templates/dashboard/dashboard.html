@@ -43,7 +43,7 @@
 
       <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12" style="color: #FFF; border: 3px solid white; border-radius: 12px; margin-bottom: 10px; ">
+            <div class="col-md-12" style="color: #FFF; border: 3px solid white; border-radius: 12px; margin-bottom: 10px; text-align: center; ">
                 <h2 style = "font-size: 350%">Welcome {{request.user.username}}</h2>  <!-- Need to Link User name to name in database -->
             </div>
           </div>
@@ -92,12 +92,17 @@
 
 
       <!-- Need to be able to link with Ids of books in the database, List has placeholders right now, will need to be able to populate list later, might need a way to create a button/entry dynamically -->
-      <!-- We can switch buttons with regular entries if we do not want to link to a book-->
+        <!-- database linking might or might not work i need to populate a user with some wanted books -->
     <div class="container-fluid">
       <div class="row display-flex" style = "border: 6px solid black;">
         <div class="col-sm-6" style = "background-color: #d9d9d9">
           <h2>Books Looking For:</h2>
             <ul class="list-group">
+                {% for listing in Listing.objects.select_related %}
+                    {% if listing.sid == request.user and listing.type == 'W' %}
+                        <li class="list-group-item">{{listing.bid}}</li>
+                    {% endif %}
+                {% endfor %}
                 <li class="list-group-item">Math Book</li>
                 <li class="list-group-item">English Book</li>
                 <li class="list-group-item">Science Book</li>
