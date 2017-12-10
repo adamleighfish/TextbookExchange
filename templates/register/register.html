@@ -36,10 +36,14 @@
             </div>
         </div>
     </nav>
-    <form enctype="multipart/form-data" method='POST'>
+    <div class="jumbotron">
+        <h1>Register Here</h1>
+        <form enctype="multipart/form-data" method='POST'>
         {% csrf_token %}
         {{ user_form.as_p }}
         <input type="submit" name="" value="Register">
     </form>
+    </div>
+
 </body>
 </html>
