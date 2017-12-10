@@ -1,0 +1,42 @@
+{% extends 'home/base.html' %}
+
+{% block stylesheet %}
+    <style>
+        body{
+            background-color:#FFFFFF;
+
+        }
+    </style>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $("#id_username").change(function () {
+            var username = $(this).val();
+
+            $.ajax({
+                url: '/ajax/validate_username/',
+                data: {
+                    'username': username
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.is_taken) {
+                        alert("A user with this username already exists.");
+                    }
+                }
+            });
+
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Sign up</button>
+        </form>
+    </div>
+{% endblock %}
