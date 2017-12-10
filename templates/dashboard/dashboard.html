@@ -7,9 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" type="text/css" media="all"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js" type="text/javascript"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel ="stylesheet" type="text/css" href='{% static "css/dashboard.css" %}'/>
+    <link rel ="stylesheet" type="text/css" href='{% static "css/home.css" %}'/>
 
 </head>
 <body>
@@ -21,12 +23,15 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+                <a class="navbar-brand" href="#"><img src="#"></a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
+
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/">Home</a></li>
                     <li><a href="/about/">About</a></li>
                     {% if user.is_authenticated %}
+                    <li class="active"><a href="{% url 'home:dashboard' %}">Dashboard</a></li>
                     <li><a href="{% url 'home:logout' %}">Logout</a></li>
                     {% else %}
                     <li><a href="{% url 'home:login' %}">Login</a></li>
@@ -36,30 +41,38 @@
         </div>
     </nav>
 
-
       <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12">
-                <h2>User's Name</h2>  <!-- Need to Link User name to name in database -->
+            <div class="col-md-12" style="color: #FFF; border: 3px solid white; border-radius: 12px; margin-bottom: 10px; text-align: center; ">
+                <h2 style = "font-size: 350%">Welcome {{request.user.first_name}}</h2>  <!-- Need to Link User name to name in database -->
             </div>
           </div>
       </div>
-
-      <hr>
-
-
-      <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>Search Bar:</h2>  <!-- Need to link to Search Bar Functionality -->
+    <div></div>
+    <form id="searchform" action="{%  url 'home:booksearch' %}" method="get">
+        <div class = "input-group input-group-lg">
+        <input class="form-control" id="q" name="q" placeholder="Search for books...">
+            <script type="text/javascript">
+        $(function() {
+        $("#q").autocomplete({
+        source: "/autocomplete/get_book/",
+        minLength: 2
+        });
+        });
+        </script>
+        <div class="input-group-btn">
+            <button class="btn btn-primary btn-block" type="submit">
+                <i class="glyphicon glyphicon-search"></i>
+                </button>
             </div>
-          </div>
-          <div class="spacer"></div>
-      </div>
+        </div>
+
+</form>
+
 
       <div class="container-fluid">
         <div  class="row">
-            <div class="col-md-12">
+            <div class="col-md-12" style ="color: #FFF">
                 <h2>Messages:</h2>  <!-- Need to link to Messages Functionality -->
             </div>
           </div>
@@ -69,7 +82,7 @@
 
       <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12" style = "color: #FFF">
                 <h2>Recommendations:</h2>  <!-- Need to Link to Recommendations Functionality -->
             </div>
           </div>
@@ -79,27 +92,27 @@
 
 
       <!-- Need to be able to link with Ids of books in the database, List has placeholders right now, will need to be able to populate list later, might need a way to create a button/entry dynamically -->
-      <!-- We can switch buttons with regular entries if we do not want to link to a book-->
+        <!-- database linking might or might not work i need to populate a user with some wanted books -->
     <div class="container-fluid">
-      <div id="user_box" class="row display-flex">
+      <div class="row display-flex" style = "border: 6px solid black;">
         <div class="col-sm-6" style = "background-color: #d9d9d9">
-          <h2><u>Books Looking For</u></h2>
+          <h2>Books Looking For:</h2>
             <ul class="list-group">
-                <li class="list-group-item">Math Book</li>
-                <li class="list-group-item">English Book</li>
-                <li class="list-group-item">Science Book</li>
-                <li class="list-group-item">History Book</li>
-                <li class="list-group-item">Spanish Book</li>
+                {% for l in listings %}
+                {% if l.sid.user == user and l.type == 'W'%}
+                <li class="list-group-item">{{l.bid}}</li>
+                {% endif %}
+                {% endfor %}
             </ul>
         </div>
         <div class="col-sm-6" style = "background-color: #d9d9d9">
-          <h2><u>Books Exchanged</u></h2>
+          <h2>Books Exchanged:</h2>
           <ul class="list-group">
-                <li class="list-group-item">Math Book</li>
-                <li class="list-group-item">English Book</li>
-                <li class="list-group-item">Science Book</li>
-                <li class="list-group-item">History Book</li>
-                <li class="list-group-item">Spanish Book</li>
+                {% for l in listings %}
+                {% if l.sid.user == user and l.type == 'G'%}
+                <li class="list-group-item">{{l.bid}}</li>
+                {% endif %}
+                {% endfor %}
             </ul>
        </div>
       </div>
