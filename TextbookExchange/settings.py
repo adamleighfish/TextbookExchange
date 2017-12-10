@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home',
     'rest_framework',
-    'django_tables2'
+    'django.utils.timesince',
+    'postman'
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ]
 }
+
+POSTMAN_AUTO_MODERATE_AS = True
