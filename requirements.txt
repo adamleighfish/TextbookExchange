@@ -1,4 +1,5 @@
 Django==1.11.8
 djangorestframework==3.7.3
 pytz==2017.3
-django-tables2=1.16.0
+django-tables2==1.16.0
+django-postman==3.6.0

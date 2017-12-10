@@ -1,0 +1,81 @@
+{% extends 'home/base.html' %}
+
+{% block javascript %}
+    <script>
+        $(function() {
+            $("#q").autocomplete({
+                source: "/autocomplete/get_book/",
+                minLength: 2
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12" style="color: #FFF; border: 3px solid white; border-radius: 12px; margin-bottom: 10px; text-align: center; ">
+                <h2 style = "font-size: 350%">Welcome {{request.user.first_name}}</h2>  <!-- Need to Link User name to name in database -->
+            </div>
+        </div>
+    </div>
+
+    <div></div>
+
+    <form id="searchform" action="{%  url 'home:booksearch' %}" method="get">
+        <div class = "input-group input-group-lg">
+        <input class="form-control" id="q" name="q" placeholder="Search for books...">
+        <div class="input-group-btn">
+            <button class="btn btn-primary btn-block" type="submit">
+                <i class="glyphicon glyphicon-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="container-fluid">
+        <div  class="row">
+            <div class="col-md-12" style ="color: #FFF">
+                <h2 style = "text-align: center; "><a style = "color: #FFF" href="{% url 'postman:inbox' %}">Inbox</a></h2>  <!-- Need to link to Messages Functionality -->
+            </div>
+          </div>
+        <div class="spacer"></div>
+    </div>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12" style = "color: #FFF">
+                <h2>Recommendations:</h2>  <!-- Need to Link to Recommendations Functionality -->
+            </div>
+        </div>
+        <div class="spacer"></div>
+    </div>
+
+
+    <div class="container-fluid">
+        <div class="row display-flex" style = "border: 6px solid black;">
+            <div class="col-sm-6" style = "background-color: #d9d9d9">
+                <h2>Books Looking For:</h2>
+                <ul class="list-group">
+                    {% for l in listings %}
+                        {% if l.sid.user == user and l.type == 'W'%}
+                            <li class="list-group-item">{{l.bid}}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-sm-6" style = "background-color: #d9d9d9">
+                <h2>Books Exchanged:</h2>
+                <ul class="list-group">
+                    {% for l in listings %}
+                        {% if l.sid.user == user and l.type == 'G'%}
+                            <li class="list-group-item">{{l.bid}}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

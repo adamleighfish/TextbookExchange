@@ -28,9 +28,9 @@
                     <li><a href="../">Home</a></li>
                     <li><a href="../about">About</a></li>
                     {% if user.is_authenticated %}
-                    <li><a href="{% url 'home:logout' %}">Logout</a></li>
+                        <li><a href="{% url 'home:logout' %}">Logout</a></li>
                     {% else %}
-                    <li><a href="{% url 'home:login' %}">Login</a></li>
+                        <li><a href="{% url 'home:login' %}">Login</a></li>
                     {% endif %}
                 </ul>
             </div>
