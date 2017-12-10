@@ -32,8 +32,8 @@ def about(request):
 def dashboard(request):
     session_language = 'en'
     request.session['lang'] = session_language
-
-    return render(request, 'dashboard/dashboard.html', {'session_language': session_language})
+    listings = Listing.objects.all();
+    return render(request, 'dashboard/dashboard.html', {'session_language': session_language, 'listings': listings})
 
 
 def register(request):
