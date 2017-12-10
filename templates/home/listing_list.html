@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 {% load staticfiles %}
-{% load django_tables2 %}
 
 <html lang="en">
 <head>
@@ -40,7 +39,49 @@
             </div>
         </div>
     </nav>
-{% render_table result %}
+{% block content %}
+    {% if result  %}
+        {% if result.count == 1 %}
+            <h1>Showing {{ result.count }} Result</h1>
+        {% else %}
+            <h1>Showing {{ result.count }} Results</h1>
+        {% endif %}
 
+        <table class='table table-hover'>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>School</th>
+                <th>Book Title</th>
+                <th>Type</th>
+                <th>Time Since Posted</th>
+            </tr>
+
+
+
+        </thead>
+        <tbody>
+        {% for instance in result %}
+            <tr>
+                <td> {{ forloop.counter}}</td>
+                <td> {{ instance.sid.school }} </td>
+                <td> {{ instance.bid }} </td>
+                <td> {{ instance.type }} </td>
+                <td> {{ instance.date|timesince}} </td>
+                <td>
+                    <a href="/messages/write/{{ instance.sid.user.username }} "><button type="button" class = "btn btn-default btn-sm">
+                        <span class="glypicon glyphicon-envelope"></span>
+                    </button>
+                    </a>
+                </td>
+            </tr>
+`
+        {% endfor %}
+        </tbody>
+        </table>
+    {% endif %}
+
+
+{% endblock %}
 </body>
 </html>
