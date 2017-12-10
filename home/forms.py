@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-
+from django.contrib.auth.forms import UserCreationForm
 from home.models import Book, School
 
 
@@ -11,12 +11,13 @@ class HomeForm(forms.ModelForm):
         fields = ("ISBN",)
 
 
-class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
+class UserForm(UserCreationForm):
+    school = forms.CharField(required=True)
+    email = forms.EmailField(required=True)
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password')
+        fields = ('username', 'first_name', 'last_name', 'email','school', 'password1', 'password2',)
 
 
 class SchoolForm(forms.ModelForm):

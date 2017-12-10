@@ -26,7 +26,7 @@ def home(request):
 
 class SignUpView(CreateView):
     template_name = 'home/signup.html'
-    form_class = UserCreationForm
+    form_class = UserForm
 
 
 class AboutView(CreateView):

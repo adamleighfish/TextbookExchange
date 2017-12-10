@@ -26,7 +26,7 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active"><a href="">Home</a></li>
-                    <li><a href= "{% url 'home:about' %}">About</a></li>
+                    <li><a href="about">About</a></li>
                     {% if user.is_authenticated %}
                     <li><a href="{% url 'home:logout' %}">Logout</a></li>
                     {% else %}
@@ -36,25 +36,10 @@
             </div>
         </div>
     </nav>
-    <div style="font-size: 400%; color:#FFF; text-align: center;"><h1>Register</h1></div>
-    <div class="container-fluid"  style= "border: 3px solid white; border-radius: 12px;">
-        <div  class="row">
-            <div class="col-md-12" style ="background-color: #d9d9d9">
     <form enctype="multipart/form-data" method='POST'>
         {% csrf_token %}
-        {% for field in user_form %}
-            {{ field.errors }}
-            <div class = "tagWrapper">{{ field.label_tag }}</div> {{ field }}
-            {% if field.help_text %}
-            <p class="help">{{ field.help_text|safe }}</p>
-            {% endif %}
-            </form>
-            <hr>
-        {% endfor %}
-                 <input type="submit" name="" value="Register" style="height:50px; width:200px; font-size:25px; text-align:center">
-                </div></div></div>
-
-
-
+        {{ user_form.as_p }}
+        <input type="submit" name="" value="Register">
+    </form>
 </body>
 </html>
