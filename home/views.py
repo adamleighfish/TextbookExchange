@@ -20,10 +20,8 @@ from home.serializers import BookSerializer, StudentSerializer, ListingSerialize
     UserSerializer, SchoolSerializer
 
 
-class HomeView(CreateView):
-    template_name = 'home/home.html'
-    queryset = Book.objects.all()
-    fields = '__all__'
+def home(request):
+    return render(request, 'home/home.html', {})
 
 
 class SignUpView(CreateView):
@@ -50,38 +48,12 @@ class DashboardView(CreateView):
 
 
 def about(request):
-    session_language = 'en'
-    request.session['lang'] = session_language
-
-    return render(request, 'about/about.html', {'session_language': session_language})
+    return render(request, 'home/about.html', {})
 
 
 def dashboard(request):
-    session_language = 'en'
-    request.session['lang'] = session_language
     listings = Listing.objects.all()
-    return render(request, 'dashboard/dashboard.html', {'session_language': session_language, 'listings': listings})
-
-
-def register(request):
-    registered = False
-
-    if request.method == "POST":
-        user_form = UserForm(data=request.POST)
-
-        if user_form.is_valid():
-
-            user = user_form.save()
-            user.set_password(user.password)
-            user.save()
-
-            registered = True
-        else:
-            print(user_form.errors)
-    else:
-        user_form = UserForm()
-
-    return render(request, 'register/register.html', {'user_form': user_form, 'registered': registered})
+    return render(request, 'home/dashboard.html', {'listings': listings})
 
 
 class AutoCompleteView(FormView):

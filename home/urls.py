@@ -13,7 +13,7 @@ router.register(r'user', views.UserViewSet)
 router.register(r'school', views.SchoolViewSet)
 
 urlpatterns = [
-    url(r'^$', views.HomeView.as_view(), name='home'),
+    url(r'^$', views.home, name='home'),
     url(r'^signup/$', views.SignUpView.as_view(), name='signup'),
     url(r'^ajax/validate_username/$', views.validate_username, name='validate_username'),
     url(r'^about/', views.about, name='about'),
@@ -23,5 +23,4 @@ urlpatterns = [
     url(r'^autocomplete/get_book/', views.AutoCompleteView.as_view(), name='get_book'),
     url(r'^api/', include(router.urls)),
     url(r'^listing_list/$', views.ListBooks.as_view(), name='booksearch'),
-
 ]
