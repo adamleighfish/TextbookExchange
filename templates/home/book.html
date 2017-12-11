@@ -1,0 +1,20 @@
+{% extends 'home/base.html' %}
+
+{% block stylesheet %}
+    <style>
+        body{
+            background-color:#FFFFFF;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h1>Add a book</h1>
+        <form action="{% url 'home:add_book' %}" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+{% endblock %}

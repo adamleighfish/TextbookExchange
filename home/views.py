@@ -2,21 +2,19 @@ import json
 import operator
 from functools import reduce
 
-
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import login, authenticate
-from django.shortcuts import render, redirect
 
-from home.forms import UserForm, SchoolForm
+from home.forms import UserForm, SchoolForm, BookForm, ListingForm
 from home.models import Book, Student, Listing, Exchange, School
 from home.serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer, \
     UserSerializer, SchoolSerializer
@@ -29,7 +27,7 @@ def home(request):
 class SignUpView(CreateView):
     template_name = 'home/signup.html'
     form_class = UserForm
-    success_url = '/school/'
+    success_url = '/dashboard'
 
 
 class StudentSchoolView(FormView):
@@ -52,6 +50,53 @@ class StudentSchoolView(FormView):
         args = {'form':form, "school":school, "state":state,"city":city}
         return render(request, self.template_name,args)
 
+
+def add_book(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = BookForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            isbn = form.cleaned_data['ISBN']
+            title = form.cleaned_data['title']
+            book = Book(ISBN=isbn, title=title)
+            book.save()
+
+            # redirect to a new URL:
+            return HttpResponseRedirect('/add_listing')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = BookForm()
+
+    return render(request, 'home/book.html', {'form': form})
+
+
+def add_listing(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = ListingForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            student = Student.objects.filter(user_id=request.user.id).first()
+
+            bid = form.cleaned_data['bid']
+            type = form.cleaned_data['type']
+            listing = Listing(sid=student, bid=bid, type=type)
+            listing.save()
+
+            # redirect to a new URL:
+            return HttpResponseRedirect('/dashboard')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = ListingForm()
+
+    return render(request, 'home/listing.html', {'form': form})
 
 
 class AboutView(CreateView):
@@ -151,7 +196,7 @@ class ListBooks(ListView):
         return result
 
 
-def find_exchange(this_listing):
+def find_exchange(this_listing: Listing):
 
     # this listing wants book bid1
     if this_listing.type == 'W':
