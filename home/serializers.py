@@ -36,7 +36,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class StudentSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="home:student-detail")
     user = UserSerializer()
-    #school = SchoolSerializer()
+    school = SchoolSerializer()
 
     class Meta:
 

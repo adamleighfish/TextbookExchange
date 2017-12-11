@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.contrib import messages
 from django.shortcuts import render
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import FormView
@@ -16,7 +17,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 
-from home.forms import UserForm, SchoolForm
+from home.forms import UserForm, SchoolForm, BookForm, ListingForm
 from home.models import Book, Student, Listing, Exchange, School
 from home.serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer, \
     UserSerializer, SchoolSerializer
@@ -34,6 +35,7 @@ class SignUpView(CreateView):
 
 class StudentSchoolView(FormView):
     template_name = 'home/school.html'
+    form_class = SchoolForm()
     success_url = "/dashboard/"
     def get(self,request, **kwargs):
         form = SchoolForm()
@@ -42,20 +44,38 @@ class StudentSchoolView(FormView):
     def post(self, request, **kwargs):
         form = SchoolForm(request.POST)
         if form.is_valid():
-            school = form.cleaned_data['school']
-            state = form.cleaned_data['state']
-            city = form.cleaned_data['city']
             form.save()
+            messages.success(request, 'Registration Successful')
+            return redirect(to='/dashboard/')
 
 
 
-        args = {'form':form, "school":school, "state":state,"city":city}
-        return render(request, self.template_name,args)
+
+    def form_valid(self, form):
+        return redirect(to='success_url')
 
 
 
 class AboutView(CreateView):
     template_name = 'home/about.html'
+
+class BookView(FormView):
+    template_name = 'home/bookinfo.html'
+    form_class = BookForm()
+    success_url = "/listing/"
+
+    def get(self, request, **kwargs):
+        form = BookForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, **kwargs):
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(to='/listing/')
+
+    def form_valid(self, form):
+        return redirect(to='/listing/')
 
 
 def validate_username(request):
@@ -66,6 +86,26 @@ def validate_username(request):
     if data['is_taken']:
         data['error_message'] = 'A user with this username already exists.'
     return JsonResponse(data)
+
+
+class ListingView(FormView):
+    template_name = 'home/listing.html'
+    form_class = ListingForm()
+    success_url = "/dashboard/"
+
+    def get(self, request, **kwargs):
+        form = ListingForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, **kwargs):
+        form = ListingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(to='/dashboard/')
+
+
+
+
 
 
 class DashboardView(CreateView):

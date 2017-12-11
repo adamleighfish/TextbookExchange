@@ -1,0 +1,16 @@
+{% extends 'home/base.html' %}
+
+
+{% block content %}
+<div class="jumbotron">
+<h1>Enter Listing Information</h1>
+
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-outline-primary">Enter</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
