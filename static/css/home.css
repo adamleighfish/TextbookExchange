@@ -66,11 +66,11 @@ table {
     border: 2px solid #263245 !important;
 }
 
-table thead tr th:nth-child(3){
+#searchTable thead tr th:nth-child(3){
     display: none;
 }
 
-table tbody tr td:nth-child(3){
+#searchTable tbody tr td:nth-child(3){
     display: none;
 }
 

@@ -1,9 +1,11 @@
 {% load staticfiles %}
+{% load postman_tags %}
+{% load i18n static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}{% trans "Messaging" %}{% endblock %}</title>
 {% block extrahead %}{% endblock %}
 <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,7 +44,15 @@
         </div>
     </nav>
 <div class="jumbotron">
-{% block postman_menu %}{% endblock %}
+{% block postman_menu %}
+<ul id="postman_menu">{% postman_unread as unread_count %}
+ <a class="btn btn-default" href="{% url 'postman:inbox' %}">&nbsp;{% trans "Inbox" %}{% if unread_count %} <strong>({{ unread_count }})</strong>{% endif %}</a></li>
+ <a class="btn btn-default" href="{% url 'postman:sent' %}">&nbsp;{% trans "Sent Messages" %}</a>
+ <a class="btn btn-default" href="{% url 'postman:write' %}">&nbsp;{% trans "Write" %}</a>
+ <a class="btn btn-default" href="{% url 'postman:archives' %}">&nbsp;{% trans "Archives" %}</a>
+ <a class="btn btn-default" href="{% url 'postman:trash' %}">&nbsp;{% trans "Trash" %}</a>
+</ul>
+{% endblock %}
 {% block content %}{% endblock %}
 </div>
 </body>
