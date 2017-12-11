@@ -55,7 +55,30 @@ img {
     cursor: default;
     pointer-events: none;
 }
+table thead tr th{
+    text-align: center;
+    background-color: #999a9b;
+ }
 
 
+table {
+    text-align: center;
+    border: 2px solid #263245 !important;
+}
+
+table thead tr th:nth-child(3){
+    display: none;
+}
+
+table tbody tr td:nth-child(3){
+    display: none;
+}
+
+.dropdown-menu{
+    text-align: center;
+    position: absolute;
+    border: 1px solid #263245;
+    background-color: #f7f8f9;
+}
 
 

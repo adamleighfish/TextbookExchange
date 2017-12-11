@@ -3,7 +3,7 @@
 {% block javascript %}
     <script>
         $dropdown = $("#myList");
-        $(".dropdown-toggle").click(function() {
+        $(".dropdown-toggle").click(function () {
             var id = $(this).closest("tr").children().eq(2).text();
             var type = $(this).closest("tr").children().eq(4).text();
             $(this).after($dropdown);
@@ -11,12 +11,12 @@
             $.ajax({
                 url: '/ajax/find_books/',
                 data: {
-                    'userid' : id,
-                    'listingtype' : type
+                    'userid': id,
+                    'listingtype': type
                 },
                 dataType: 'json',
                 success: function (data) {
-                    if (Object.keys(data).length){
+                    if (Object.keys(data).length) {
                         $.each(data, function (i, result) {
                             var bookTitle = result;
                             $('#myList').append('<li role="presentation"><a class="inactiveLink" role="menuitem" tabindex="-1">' + bookTitle + '</a></li>');
@@ -24,7 +24,7 @@
                         });
                     }
                     else {
-                        $('#myList').append('<li role="presentation"><a class="inactiveLink" role="menuitem" tabindex="-1">No Books Found</a></li>');
+                        $('#myList').append('<li role="presentation"><a class="inactiveLink" role="menuitem" tabindex="-1">No books found...</a></li>');
                     }
                 }
 
@@ -36,66 +36,83 @@
 {% endblock %}
 
 {% block content %}
-    <div class ='jumbotron'>
-    {% if result  %}
+    <div class='jumbotron'>
+        {% if result %}
         {% if result.count == 1 %}
             <h2>Showing {{ result.count }} Result</h2>
         {% else %}
             <h2>Showing {{ result.count }} Results</h2>
         {% endif %}
 
-
-        <table class='table table-hover' id = "searchTable">
-
-        <thead>
+        <table class='table table-condensed table-striped'>
+            <thead>
             <tr>
                 <th>#</th>
                 <th>School</th>
                 <th>Username</th>
-                <th>Book Title</th>
+                <th>Title</th>
                 <th>Type</th>
-                <th>Time Since Posted</th>
-                <th>Books Wanting/Giving</th>
-                <th>Message User</th>
+                <th>Posted</th>
+                <th>Wanting/Giving</th>
+                <th>Message</th>
             </tr>
+            </thead>
+            <tbody>
+            {% for instance in result %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ instance.sid.school }} </td>
+                    <td>{{ instance.sid.user.username }}</td>
+                    <td>{{ instance.bid }} </td>
+                    <td>{{ instance.type }} </td>
+                    <td>{{ instance.date|timesince }} </td>
+                    <td class="dropdown">
+                        {% if instance.type == 'W' %}
+                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#"
+                               id="dropdownbutton">Show Books Giving</a>
+                        {% else %}
+                            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#"
+                               id="dropdownbutton">Show Books Wanted</a>
+                        {% endif %}
+                    </td>
 
 
+                    <td>
+                        <a href="/messages/write/{{ instance.sid.user.username }} ">
+                            <button type="button" class="btn btn-default btn-sm">
+                                <span class="glypicon glyphicon-envelope"></span>
+                            </button>
+                        </a>
+                    </td>
+                </tr>
 
-        </thead>
-        <tbody>
-        {% for instance in result %}
-            <tr>
-                <td>{{ forloop.counter}}</td>
-                <td>{{ instance.sid.school }} </td>
-                <td>{{ instance.sid.user.username}}</td>
-                <td>{{ instance.bid }} </td>
-                <td>{{ instance.type }} </td>
-                <td>{{ instance.date|timesince}} </td>
-                <td class="dropdown">
-                    {% if instance.type == 'W' %}
-                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" id="dropdownbutton">Show Books Giving</a>
-                    {% else %}
-                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" id="dropdownbutton">Show Books Wanted</a>
-                    {%  endif %}
-                </td>
-
-
-                <td>
-                    <a href="/messages/write/{{ instance.sid.user.username }} "><button type="button" class = "btn btn-default btn-sm">
-                        <span class="glypicon glyphicon-envelope"></span>
-                    </button>
-                    </a>
-                </td>
-            </tr>
-`
-        {% endfor %}
-        </tbody>
-
+            {% endfor %}
+            </tbody>
         </table>
-        </div>
+        {% if is_paginated %}
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                    <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+                {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% else %}
+                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                    <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+            </ul>
+        {% endif %}
+        {% endif %}
         <ul class="dropdown-menu" id="myList" role="menu" aria-labelledby="dropdownbutton"></ul>
-    {% endif %}
-
+    </div>
 
 {% endblock %}
 </body>

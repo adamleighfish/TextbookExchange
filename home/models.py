@@ -52,6 +52,7 @@ Field type indicates whether is book the student is listing is one he/she wants(
 """
 
 
+
 class Listing(models.Model):
     TYPES = (
         ('W', 'Want'),
