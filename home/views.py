@@ -126,7 +126,70 @@ class ListBooks(ListView):
         query = self.request.GET.get('q')
         if query:
             query_list = query.split()
-            result = result.filter(reduce(operator.and_, (Q(bid__title__icontains=q) for q in query_list)))
+            result = result.filter(reduce(operator.and_, (Q(bid__title__icontains=q) for q in query_list)),
+                                   open=True)
 
         return result
 
+
+def find_exchange(this_listing):
+
+    # this listing wants book bid1
+    if this_listing.type == 'W':
+
+        # find a list of all listings giving book bid1
+        listings = Listing.objects.filter(type == 'G').filter(bid__exact=this_listing.bid)
+
+        # all of this users current 'G' listings
+        this_user_listings = Listing.objects.filter(type='G').filter(sid__exact=this_listing.sid)
+
+        # for each listing, get the books the user who is giving bid1 wants
+        for listing in listings:
+            reverse_listings = Listing.objects.filter(type == 'W').filter(sid__exact=listing.sid)
+
+            # if the original lister can give any of those books make an exchange
+            for reverse_listing in reverse_listings:
+                this_user_listings = this_user_listings.filter(bid__exact=reverse_listing.bid)
+
+                if this_user_listings.count() > 0:
+                    this_user_listing = this_user_listings.first()
+
+                    this_listing.open = False
+                    reverse_listing.open = False
+                    listing.open = False
+                    this_user_listing.open = False
+
+                    query = Exchange(sid1=listing.sid, bid1=listing.bid,
+                                     sid2=this_user_listing.sid, bid2=this_user_listing.bid)
+                    query.save()
+                    return
+
+    # this listing is giving book bid1
+    elif this_listing.type == 'G':
+
+        # find a list of all listing wanting book bid1
+        listings = Listing.objects.filter(type == 'W').filter(bid__exact=this_listing.bid)
+
+        # all of this users current 'W' listings
+        this_user_listings = Listing.objects.filter(type='W').filter(sid__exact=this_listing.sid)
+
+        # for each listing, get the books the user who wants bid1 are giving
+        for listing in listings:
+            reverse_listings = Listing.objects.filter(type == 'G').filter(sid__exact=listing.sid)
+
+            # if the original lister wants any of those books make an exchange
+            for reverse_listing in reverse_listings:
+                this_user_listings = this_user_listings.filter(bid__exact=reverse_listing.bid)
+
+                if this_user_listings.count() > 0:
+                    this_user_listing = this_user_listings.first()
+
+                    this_listing.open = False
+                    reverse_listing.open = False
+                    listing.open = False
+                    this_user_listing.open = False
+
+                    query = Exchange(sid1=this_listing.sid, bid1=this_listing.bid,
+                                     sid2=reverse_listing.sid, bid2=reverse_listing.bid)
+                    query.save()
+                    return
