@@ -2,7 +2,7 @@ import json
 import operator
 from functools import reduce
 
-from django.contrib.auth.forms import UserCreationForm
+
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponse
@@ -14,7 +14,7 @@ from django.views.generic.list import ListView
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from home.forms import UserForm
+from home.forms import UserForm, SchoolForm
 from home.models import Book, Student, Listing, Exchange, School
 from home.serializers import BookSerializer, StudentSerializer, ListingSerializer, ExchangeSerializer, \
     UserSerializer, SchoolSerializer
@@ -27,7 +27,13 @@ def home(request):
 class SignUpView(CreateView):
     template_name = 'home/signup.html'
     form_class = UserForm
+    success_url = '/school/'
 
+
+class StudentSchoolView(FormView):
+    template_name = 'home/school.html'
+    form_class = SchoolForm
+    success_url = '/dashboard/'
 
 class AboutView(CreateView):
     template_name = 'home/about.html'

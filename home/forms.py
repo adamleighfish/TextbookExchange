@@ -12,12 +12,11 @@ class HomeForm(forms.ModelForm):
 
 
 class UserForm(UserCreationForm):
-    school = forms.CharField(required=True)
-    email = forms.EmailField(required=True)
+
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email','school', 'password1', 'password2',)
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2',)
 
 
 class SchoolForm(forms.ModelForm):
