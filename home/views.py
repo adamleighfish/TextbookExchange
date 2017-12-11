@@ -13,6 +13,8 @@ from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import login, authenticate
+from django.shortcuts import render, redirect
 
 from home.forms import UserForm, SchoolForm
 from home.models import Book, Student, Listing, Exchange, School
@@ -32,8 +34,25 @@ class SignUpView(CreateView):
 
 class StudentSchoolView(FormView):
     template_name = 'home/school.html'
-    form_class = SchoolForm
-    success_url = '/dashboard/'
+    success_url = "/dashboard/"
+    def get(self,request, **kwargs):
+        form = SchoolForm()
+        return render(request, self.template_name, {'form':form})
+
+    def post(self, request, **kwargs):
+        form = SchoolForm(request.POST)
+        if form.is_valid():
+            school = form.cleaned_data['school']
+            state = form.cleaned_data['state']
+            city = form.cleaned_data['city']
+            form.save()
+
+
+
+        args = {'form':form, "school":school, "state":state,"city":city}
+        return render(request, self.template_name,args)
+
+
 
 class AboutView(CreateView):
     template_name = 'home/about.html'

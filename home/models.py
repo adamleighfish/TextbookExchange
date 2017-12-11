@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
 
 """ School Table
 
@@ -24,10 +25,7 @@ Standard db representation of a student
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    school = models.ForeignKey(School)
-
-    def __str__(self):
-        return self.user.first_name + ' ' + self.user.last_name
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
 
 
 """ Book Table
