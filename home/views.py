@@ -193,3 +193,23 @@ def find_exchange(this_listing):
                                      sid2=reverse_listing.sid, bid2=reverse_listing.bid)
                     query.save()
                     return
+
+
+def find_books(request):
+        userid = request.GET.get('userid')
+        listingtype = request.GET.get('listingtype')
+        if listingtype == 'G ':
+            listingtype = 'G'
+        else:
+            listingtype = 'W'
+
+        books = Listing.objects.filter(sid__user__username__exact=userid).exclude(type__iexact=listingtype)
+
+        data = {}
+        i = 1
+        for book in books:
+            data[i] = book.bid.title
+            i = i + 1
+
+        print(data)
+        return JsonResponse(data)

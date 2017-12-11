@@ -1,61 +1,58 @@
-<!DOCTYPE html>
-{% load staticfiles %}
+{% extends 'home/base.html' %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Available Book Listings</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" type="text/css" media="all"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js" type="text/javascript"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel ="stylesheet" type="text/css" href='{% static "css/home.css" %}'/>
-</head>
-<body>
-<nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavBar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#"><img src="#"></a>
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
+{% block javascript %}
+    <script>
+        $dropdown = $("#myList");
+        $(".dropdown-toggle").click(function() {
+            var id = $(this).closest("tr").children().eq(2).text();
+            var type = $(this).closest("tr").children().eq(4).text();
+            $(this).after($dropdown);
+            $dropdown.empty()
+            $.ajax({
+                url: '/ajax/find_books/',
+                data: {
+                    'userid' : id,
+                    'listingtype' : type
+                },
+                dataType: 'json',
+                success: function (data) {
 
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="../">Home</a></li>
-                    <li><a href="../about">About</a></li>
-                    {% if user.is_authenticated %}
-                    <li><a href="{% url 'home:logout' %}">Logout</a></li>
-                    {% else %}
-                    <li><a href="{% url 'home:login' %}">Login</a></li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-<div class="jumbotron">
+                    $.each(data, function (i, result) {
+                        var bookTitle = result;
+                        $('#myList').append('<li role="presentation"><a class="inactiveLink" role="menuitem" tabindex="-1">' + bookTitle + '</a></li>');
+
+                    });
+                }
+
+
+            });
+            $(this).dropdown();
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
+    <div class ='jumbotron'>
     {% if result  %}
         {% if result.count == 1 %}
-            <h1>Showing {{ result.count }} Result</h1>
+            <h2>Showing {{ result.count }} Result</h2>
         {% else %}
-            <h1>Showing {{ result.count }} Results</h1>
+            <h2>Showing {{ result.count }} Results</h2>
         {% endif %}
 
-        <table class='table table-hover'>
+
+        <table class='table table-hover' id = "searchTable">
+
         <thead>
             <tr>
                 <th>#</th>
                 <th>School</th>
+                <th>Username</th>
                 <th>Book Title</th>
                 <th>Type</th>
                 <th>Time Since Posted</th>
+                <th>Books Wanting/Giving</th>
+                <th>Message User</th>
             </tr>
 
 
@@ -64,11 +61,21 @@
         <tbody>
         {% for instance in result %}
             <tr>
-                <td> {{ forloop.counter}}</td>
-                <td> {{ instance.sid.school }} </td>
-                <td> {{ instance.bid }} </td>
-                <td> {{ instance.type }} </td>
-                <td> {{ instance.date|timesince}} </td>
+                <td>{{ forloop.counter}}</td>
+                <td>{{ instance.sid.school }} </td>
+                <td>{{ instance.sid.user.username}}</td>
+                <td>{{ instance.bid }} </td>
+                <td>{{ instance.type }} </td>
+                <td>{{ instance.date|timesince}} </td>
+                <td class="dropdown">
+                    {% if instance.type == 'W' %}
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" id="dropdownbutton">Show Books Giving</a>
+                    {% else %}
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" id="dropdownbutton">Show Books Wanted</a>
+                    {%  endif %}
+                </td>
+
+
                 <td>
                     <a href="/messages/write/{{ instance.sid.user.username }} "><button type="button" class = "btn btn-default btn-sm">
                         <span class="glypicon glyphicon-envelope"></span>
@@ -79,11 +86,13 @@
 `
         {% endfor %}
         </tbody>
+
         </table>
+        </div>
+        <ul class="dropdown-menu" id="myList" role="menu" aria-labelledby="dropdownbutton"></ul>
     {% endif %}
 
 
 {% endblock %}
-</div>
 </body>
 </html>

@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^autocomplete/get_book/', views.AutoCompleteView.as_view(), name='get_book'),
     url(r'^api/', include(router.urls)),
     url(r'^listing_list/$', views.ListBooks.as_view(), name='booksearch'),
+    url(r'^ajax/find_books/$', views.find_books, name='find_books'),
 ]

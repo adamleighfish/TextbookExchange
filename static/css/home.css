@@ -37,12 +37,7 @@ body{
           border: 2px solid #FFF;
       }
       
-@media (max-width:600px){
-          .carousel-caption{
-              display: none;
-          }
-      }
-      
+
 .container {
           margin: 4% auto;
       }
@@ -55,3 +50,12 @@ body{
 img {
           height: 100%;
       }
+
+.inactiveLink {
+    cursor: default;
+    pointer-events: none;
+}
+
+
+
+
