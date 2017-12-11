@@ -14,7 +14,7 @@ router.register(r'school', views.SchoolViewSet)
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
-    url(r'^signup/$', views.SignUpView.as_view(), name='signup'),
+    url(r'^signup/$', views.add_user, name='signup'),
     url(r'^school/$', views.StudentSchoolView.as_view(), name='school'),
     url(r'^ajax/validate_username/$', views.validate_username, name='validate_username'),
     url(r'^about/', views.about, name='about'),

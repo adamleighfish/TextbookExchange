@@ -35,10 +35,10 @@
     <div class="jumbotron">
     <div>
         <h1 style="text-align: center; bottom:20px;">Register</h1>
-        <form method="post">
+        <form method="post" action="">
             {% csrf_token %}
             {{ form.as_p }}
-            <button class="btn btn-outline-primary" type="submit">Sign up</button>
+            <input type="submit" value="Create new user account" />
         </form>
     </div>
     </div>

@@ -3,6 +3,7 @@ import operator
 from functools import reduce
 
 from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate
 from django.db.models import Q
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -24,10 +25,19 @@ def home(request):
     return render(request, 'home/home.html', {})
 
 
-class SignUpView(CreateView):
-    template_name = 'home/signup.html'
-    form_class = UserForm
-    success_url = '/dashboard'
+def add_user(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return HttpResponseRedirect('/school')
+    else:
+        form = UserForm()
+    return render(request, 'home/signup.html', {'form': form})
 
 
 class StudentSchoolView(FormView):
@@ -43,12 +53,21 @@ class StudentSchoolView(FormView):
             school = form.cleaned_data['school']
             state = form.cleaned_data['state']
             city = form.cleaned_data['city']
-            form.save()
 
+            if School.objects.filter(school=school).count() > 0:
+                school_model = School.objects.filter(school=school).first()
+                new_student = Student(user=request.user, school=school_model)
+                new_student.save()
 
+            else:
+                school_model = School(school=school, state=state, city=city)
+                school_model.save()
+                new_student = Student(user=request.user, school=school_model)
+                new_student.save()
 
-        args = {'form':form, "school":school, "state":state,"city":city}
-        return render(request, self.template_name,args)
+            return HttpResponseRedirect('/dashboard')
+
+        return render(request, self.template_name, {'form': form})
 
 
 def add_book(request):
@@ -61,7 +80,13 @@ def add_book(request):
             # process the data in form.cleaned_data as required
             isbn = form.cleaned_data['ISBN']
             title = form.cleaned_data['title']
+
+            # check to see if the book is already made
+            if Book.objects.filter(Q(ISBN=isbn) | Q(title=title)).count() > 0:
+                return HttpResponseRedirect('/add_listing')
+
             book = Book(ISBN=isbn, title=title)
+
             book.save()
 
             # redirect to a new URL:
@@ -88,6 +113,8 @@ def add_listing(request):
             type = form.cleaned_data['type']
             listing = Listing(sid=student, bid=bid, type=type)
             listing.save()
+
+            find_exchange(listing)
 
             # redirect to a new URL:
             return HttpResponseRedirect('/dashboard')
@@ -202,14 +229,14 @@ def find_exchange(this_listing: Listing):
     if this_listing.type == 'W':
 
         # find a list of all listings giving book bid1
-        listings = Listing.objects.filter(type == 'G').filter(bid__exact=this_listing.bid)
+        listings = Listing.objects.filter(type='G').filter(bid__exact=this_listing.bid)
 
         # all of this users current 'G' listings
         this_user_listings = Listing.objects.filter(type='G').filter(sid__exact=this_listing.sid)
 
         # for each listing, get the books the user who is giving bid1 wants
         for listing in listings:
-            reverse_listings = Listing.objects.filter(type == 'W').filter(sid__exact=listing.sid)
+            reverse_listings = Listing.objects.filter(type='W').filter(sid__exact=listing.sid)
 
             # if the original lister can give any of those books make an exchange
             for reverse_listing in reverse_listings:
@@ -226,20 +253,20 @@ def find_exchange(this_listing: Listing):
                     query = Exchange(sid1=listing.sid, bid1=listing.bid,
                                      sid2=this_user_listing.sid, bid2=this_user_listing.bid)
                     query.save()
-                    return
+                    return True
 
     # this listing is giving book bid1
     elif this_listing.type == 'G':
 
         # find a list of all listing wanting book bid1
-        listings = Listing.objects.filter(type == 'W').filter(bid__exact=this_listing.bid)
+        listings = Listing.objects.filter(type='W').filter(bid=this_listing.bid)
 
         # all of this users current 'W' listings
         this_user_listings = Listing.objects.filter(type='W').filter(sid__exact=this_listing.sid)
 
         # for each listing, get the books the user who wants bid1 are giving
         for listing in listings:
-            reverse_listings = Listing.objects.filter(type == 'G').filter(sid__exact=listing.sid)
+            reverse_listings = Listing.objects.filter(type='G').filter(sid__exact=listing.sid)
 
             # if the original lister wants any of those books make an exchange
             for reverse_listing in reverse_listings:
@@ -256,7 +283,9 @@ def find_exchange(this_listing: Listing):
                     query = Exchange(sid1=this_listing.sid, bid1=this_listing.bid,
                                      sid2=reverse_listing.sid, bid2=reverse_listing.bid)
                     query.save()
-                    return
+                    return True
+
+    return False
 
 
 def find_books(request):
