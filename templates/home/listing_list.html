@@ -16,12 +16,16 @@
                 },
                 dataType: 'json',
                 success: function (data) {
+                    if (Object.keys(data).length){
+                        $.each(data, function (i, result) {
+                            var bookTitle = result;
+                            $('#myList').append('<li role="presentation"><a class="inactiveLink" role="menuitem" tabindex="-1">' + bookTitle + '</a></li>');
 
-                    $.each(data, function (i, result) {
-                        var bookTitle = result;
-                        $('#myList').append('<li role="presentation"><a class="inactiveLink" role="menuitem" tabindex="-1">' + bookTitle + '</a></li>');
-
-                    });
+                        });
+                    }
+                    else {
+                        $('#myList').append('<li role="presentation"><a class="inactiveLink" role="menuitem" tabindex="-1">No Books Found</a></li>');
+                    }
                 }
 
 

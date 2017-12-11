@@ -211,5 +211,5 @@ def find_books(request):
             data[i] = book.bid.title
             i = i + 1
 
-        print(data)
+
         return JsonResponse(data)
