@@ -53,7 +53,7 @@ class ListingSerializer(serializers.HyperlinkedModelSerializer):
 
         model = Listing
         fields = ('url', 'sid', 'bid', 'type', 'date', 'open')
-        read_only_fields = ('sid', 'bid', 'date')
+
 
 
 class ExchangeSerializer(serializers.HyperlinkedModelSerializer):
@@ -67,4 +67,4 @@ class ExchangeSerializer(serializers.HyperlinkedModelSerializer):
 
         model = Exchange
         fields = ('url', 'sid1', 'bid1', 'sid2', 'bid2', 'date')
-        read_only_fields = ('url', 'sid1', 'bid1', 'sid2', 'bid2', 'date')
+        
