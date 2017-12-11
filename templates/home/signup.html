@@ -34,10 +34,11 @@
 {% block content %}
     <div class="jumbotron">
     <div>
+        <h1 style="text-align: center; bottom:20px;">Register</h1>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Sign up</button>
+            <button class="btn btn-outline-primary" type="submit">Sign up</button>
         </form>
     </div>
     </div>
